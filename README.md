@@ -6,6 +6,6 @@ Simple Docker image which uses longsleep's scripts to build an Ubuntu Xenial ima
 Usage
 =====
     
-    cd builder
-    docker build -t pine64-docker-swarm-image-builder .
-    docker run -ti -v /nfs/atlas/pine64-dev/workspace:/workspace --privileged pine64-docker-swarm-image-builder
+    mkdir workspace
+    docker build -t pine64-image-builder builder/ && \
+      docker run --privileged --rm -t -v ${pwd}/workspace:/workspace pine64-image-builder
