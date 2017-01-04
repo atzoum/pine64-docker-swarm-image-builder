@@ -10,27 +10,28 @@ rm -rf * && \
 mkdir ${WORKSPACE}/target && \
 cd ${WORKSPACE} && \
 ## clone git repos
-git clone --depth 1 --single-branch https://github.com/longsleep/build-pine64-image && \
+git clone --depth 1 --single-branch https://github.com/atzoum/build-pine64-image && \
 cd build-pine64-image && \
 # https://github.com/longsleep/build-pine64-image/blob/master/kernel/README.md#kernel-310-from-bsp
-git clone --depth 1 --branch pine64-hacks-1.2 --single-branch https://github.com/longsleep/linux-pine64.git linux && \
+git clone --depth 1 --branch pine64-hacks-1.2 --single-branch https://github.com/atzoum/linux-pine64.git linux && \
 # https://github.com/longsleep/build-pine64-image/blob/master/kernel/README.md#get-busybox-tree
 git clone --depth 1 --branch 1_24_stable --single-branch git://git.busybox.net/busybox busybox && \
 # https://github.com/longsleep/build-pine64-image/blob/master/kernel/README.md#configure-bsp-kernel
 cd linux && \
 make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- sun50iw1p1smp_linux_defconfig && \
-## copy config file (this is the custom part...)
-cp ${DOCKER_CONFIG} ${WORKSPACE}/build-pine64-image/linux/.config && \ 
+### copy config file (this is the custom part...)
+#cp ${DOCKER_CONFIG} ${WORKSPACE}/build-pine64-image/linux/.config && \ 
 ## compile kernel
 # https://github.com/longsleep/build-pine64-image/blob/master/kernel/README.md#compile-bsp-kernel
+make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- sun50iw1p1smp_linux_defconfig
 make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- LOCALVERSION= clean && \
-make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j4 LOCALVERSION= Image && \
-make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j4 LOCALVERSION= modules && \
+make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j5 LOCALVERSION= Image && \
+make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j5 LOCALVERSION= modules && \
 # https://github.com/longsleep/build-pine64-image/blob/master/kernel/README.md#configure-and-build-busybox
 cp ${WORKSPACE}/build-pine64-image/kernel/pine64_config_busybox ${WORKSPACE}/build-pine64-image/busybox/.config && \
 cd ${WORKSPACE}/build-pine64-image//busybox && \
-make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j4 oldconfig && \
-make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j4 && \
+make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j5 oldconfig && \
+make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j5 && \
 # https://github.com/longsleep/build-pine64-image/blob/master/kernel/README.md#make-initrdgz
 cd ${WORKSPACE}/build-pine64-image/kernel && \
 ./make_initrd.sh && \
