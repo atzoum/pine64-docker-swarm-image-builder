@@ -8,4 +8,4 @@ Usage
     
     mkdir workspace
     docker build -t pine64-image-builder builder/ && \
-      docker run --privileged --rm -t -v ${pwd}/workspace:/workspace pine64-image-builder
+      docker run --privileged --rm -t -v `pwd`/workspace:/workspace pine64-image-builder
